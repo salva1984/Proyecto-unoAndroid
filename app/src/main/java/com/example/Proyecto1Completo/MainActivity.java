@@ -138,11 +138,14 @@ public class MainActivity extends AppCompatActivity {
             if (!(j.revisarMano(j.getCartasPlayer()))) {
                 //si no puedes jugar ninguna carta, caes aqui
                 statusP.append("No tienes cartas que jugar!" + "\n");
-                //te dan una carta
+                //te dan una carta, borra los mensajes por si jugaste un bloqueo y de una te mando a jugar de nuevo aca
+                j.mensaje.delete(0, j.mensaje.length());
                 j.darCartas(j.getCartasPlayer(),1);
                 statusP.append(j.mensaje.toString() + "\n");
                 //actualiza tu mano
                 actualizarTablero(cartas, hcont2);
+                //borra los mensajes lol
+
                 //la maquina juega
                 j.jugarTurno(j.getCartasMaquina(), j.getCartasPlayer(), "MAQUINA", "JUGADOR", j.elegirCarta(cartas));
                 //mostramos lo que sucedio
@@ -199,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void jugarTurnoUI(List<Carta> cartas, LinearLayout hcont, Carta cc) {
         //TODO edge case que ocurre cuando se juega un +4 negro y no tienes cartas que tambien se puedan jugar
-        j.jugarCarta(cc,j.getCartasPlayer(), j.getCartasMaquina(), "JUGADOR", "MAQUINA");
+        j.jugarTurno(j.getCartasPlayer(), j.getCartasMaquina(), "JUGADOR", "MAQUINA",cc);
         statusP.append(j.mensaje.toString()+"\n");
         j.jugarTurno(j.getCartasMaquina(), j.getCartasPlayer(), "MAQUINA", "JUGADOR", cc);
         statusP.append(j.mensaje.toString()+"\n");

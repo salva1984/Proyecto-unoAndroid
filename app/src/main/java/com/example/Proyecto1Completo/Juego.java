@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class Juego {
 
 
-    StringBuilder mensaje;
+    public StringBuilder mensaje;
     private CartaComodin cc;
     MainActivity mainActivity;
 
@@ -158,6 +158,8 @@ public class Juego {
         System.out.println(cartasMaquina);
         mensaje = new StringBuilder();
         if (nombreJugador.equals("MAQUINA")) {
+            //borrate mensaje!!!!
+            mensaje.delete(0, mensaje.length());
             //si la maquina no puede jugar ninguna....
             if (elegirCarta(cartasJugador) == null) {
                 //le damoos una maquina a la maquina
@@ -251,7 +253,10 @@ public class Juego {
                 mensaje.append(nombreJugador).append(" bloquea a: ").append(nombreRival).append(", ").append(nombreJugador).append(" juega de nuevo.");
                 System.out.println(Juego.SEPARADOR);
 
-                //TODO
+                ////////////////////////////////////////////////////////////////////
+                //
+                //IMPORTANTE
+                //
                 //check si la maquina esta jugando, puede volver a jugar
                 if (nombreJugador.equals("MAQUINA")) {
                     jugarTurno(cartasJugador, cartasRival, nombreJugador, nombreRival, elegirCarta(cartasJugador));
@@ -276,9 +281,9 @@ public class Juego {
                 cartasJugador.remove(cc);
                 System.out.println(nombreJugador + Juego.JUEGA + uc.toString());
                 System.out.println(nombreRival + " toma dos cartas!");
-
-                mensaje.append(nombreRival + " toma dos cartas!"+"\n");
                 mensaje.append(nombreJugador +" "+ Juego.JUEGA + uc.toString()+"\n");
+                mensaje.append(nombreRival + " toma dos cartas!"+"\n");
+
 
                 System.out.println(Juego.SEPARADOR);
                 darCartas(cartasRival,2);
