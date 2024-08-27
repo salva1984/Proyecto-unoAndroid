@@ -305,8 +305,8 @@ public class Juego {
     }
 
     public void darCartas(List<Carta> cartas,int numero){
-        //borramos mensajes anteriores
-        mensaje = new StringBuilder();
+
+
         for (int i = 0; i < numero; i++) {
             Carta c = robarCarta();
             mensaje.append("Robando carta ").append(c.toString()).append("\n");
