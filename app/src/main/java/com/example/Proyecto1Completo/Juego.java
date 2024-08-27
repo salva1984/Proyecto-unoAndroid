@@ -156,14 +156,13 @@ public class Juego {
         System.out.println(cartasPlayer.toString());
         System.out.println("cartas de la maquina");
         System.out.println(cartasMaquina);
-
+        mensaje = new StringBuilder();
         if (nombreJugador.equals("MAQUINA")) {
             //si la maquina no puede jugar ninguna....
             if (elegirCarta(cartasJugador) == null) {
                 //le damoos una maquina a la maquina
-                cartasJugador.add(0,robarCarta());
-                //avisamos que paso
                 mensaje.append(nombreJugador).append(" no tiene cartas disponibles para jugar, saltando turno."+"\n");
+                darCartas(cartasJugador,1);
                 System.out.println(nombreJugador + " no tiene cartas disponibles para jugar, saltando turno.");
             } else {
                 //si la maquina si puede jugar alguna carta:...
@@ -177,7 +176,7 @@ public class Juego {
                 mensaje.delete(0, mensaje.length());
                 mensaje.append(
                         "Jugador no tiene cartas disponibles para jugar, tomando carta y pasando turno "+"\n");
-                cartasJugador.add(0,robarCarta());
+                darCartas(cartasJugador,1);
                 //sc.nextLine();
 
             }
@@ -220,7 +219,7 @@ public class Juego {
                            List<Carta> cartasRival, String nombreJugador, String nombreRival) {
 
 
-        mensaje = new StringBuilder();
+
         if (cartaJugar instanceof CartaNormal) {
             // Metemos al mazo la ultima carta
             mazo.add(uc);
@@ -228,7 +227,7 @@ public class Juego {
             uc = cartaJugar;
             // quitmos la carta jugada al jugador
             cartasJugador.remove(uc);
-            mensaje.append(nombreJugador).append(Juego.JUEGA).append(uc.toString());
+            mensaje.append(nombreJugador).append(Juego.JUEGA).append(uc.toString()+"\n");
             System.out.println(Juego.SEPARADOR);
 
         }
@@ -246,7 +245,7 @@ public class Juego {
                 // quitmos la carta jugada al jugador
                 cartasJugador.remove(cc);
                 System.out.println(nombreJugador + Juego.JUEGA + uc.toString());
-                mensaje.append(nombreJugador).append(Juego.JUEGA).append(uc.toString());
+                mensaje.append(nombreJugador).append(Juego.JUEGA).append(uc.toString()).append("\n");
                 System.out
                         .println(nombreJugador + " bloquea a: " + nombreRival + ", " + nombreJugador + " juega de nuevo."+"\n");
                 mensaje.append(nombreJugador).append(" bloquea a: ").append(nombreRival).append(", ").append(nombreJugador).append(" juega de nuevo.");
@@ -277,8 +276,10 @@ public class Juego {
                 cartasJugador.remove(cc);
                 System.out.println(nombreJugador + Juego.JUEGA + uc.toString());
                 System.out.println(nombreRival + " toma dos cartas!");
-                mensaje.append(nombreJugador +" "+ Juego.JUEGA + uc.toString()+"\n");
+
                 mensaje.append(nombreRival + " toma dos cartas!"+"\n");
+                mensaje.append(nombreJugador +" "+ Juego.JUEGA + uc.toString()+"\n");
+
                 System.out.println(Juego.SEPARADOR);
                 darCartas(cartasRival,2);
 
@@ -289,10 +290,13 @@ public class Juego {
                 mazo.add(uc);
                 uc = cc;
                 cartasJugador.remove(cc);
+
                 System.out.println(nombreRival + "toma CUATRO cartas!");
                 System.out.println(nombreJugador + "juega la carta" + uc.toString());
-                mensaje.append(nombreRival + "toma CUATRO cartas!"+"\n");
+
                 mensaje.append(nombreJugador + "juega la carta" + uc.toString()+"\n");
+                mensaje.append(nombreRival + "toma CUATRO cartas!"+"\n");
+
                 System.out.println(Juego.SEPARADOR);
                 darCartas(cartasRival,4);
             }
@@ -301,6 +305,8 @@ public class Juego {
     }
 
     public void darCartas(List<Carta> cartas,int numero){
+        //borramos mensajes anteriores
+        mensaje = new StringBuilder();
         for (int i = 0; i < numero; i++) {
             Carta c = robarCarta();
             mensaje.append("Robando carta ").append(c.toString()).append("\n");

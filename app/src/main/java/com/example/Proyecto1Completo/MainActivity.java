@@ -129,59 +129,65 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void jugarCartaUI(List<Carta> cartas, LinearLayout hcont, Carta carta) {
+        if(j.getCartasMaquina().isEmpty()){
+            //si la maquina esta vacia, no hagas nada loco
+            statusP.setText("Gana la maquina!");}
+        else {
 
-        //si no puedes jugar ninguna carta, caes aqui
-        if (!(j.revisarMano(j.getCartasPlayer()))) {
 
-            statusP.append("No tienes cartas que jugar!" + "\n");
-            //te dan una carta
-            j.getCartasPlayer().add(0,j.robarCarta());
-            //actualiza tu mano
-            actualizarTablero(cartas,hcont2);
-            //la maquina juega
-            j.jugarTurno(j.getCartasMaquina(),j.getCartasPlayer(),"MAQUINA","JUGADOR", j.elegirCarta(cartas));
-            //mostramos lo que sucedio
-            statusP.append(j.mensaje.toString()+"\n");
-            //actualizamos
-            actualizarTablero(cartas,hcont2);
-        }
-        //revisar si la carta se puede jugar
-        else if (j.revisarCarta(carta)) {
-
-            if (carta instanceof CartaComodin) {
-
-                CartaComodin cc = (CartaComodin) carta;
-                if (cc.getColor()==Color.n) {
-                    // aqui juegan los comodines negros, que requieren que escojas un color y tienen que esperar.
-                    //callback
-                    j.jugarComodinColor(cc, "JUGADOR", new SeleccionarColorCallback() {
-                        @Override
-                        public void seleccionarColor(Color color) {
-//                            cc.setColor(color);
-                            manejarComodin(cartas, hcont, cc);
-                        }
-                    });
-                } else {
-                    // aqui juegan los comodines que no son negros (mas2,mas4,bloqueo,reversa)
-                    manejarComodin(cartas, hcont, cc);
-                }
-            } else {
-                //juegan cartas normales
-                jugarTurnoUI(cartas,hcont2,carta);
+            if (!(j.revisarMano(j.getCartasPlayer()))) {
+                //si no puedes jugar ninguna carta, caes aqui
+                statusP.append("No tienes cartas que jugar!" + "\n");
+                //te dan una carta
+                j.darCartas(j.getCartasPlayer(),1);
+                statusP.append(j.mensaje.toString() + "\n");
+                //actualiza tu mano
+                actualizarTablero(cartas, hcont2);
+                //la maquina juega
+                j.jugarTurno(j.getCartasMaquina(), j.getCartasPlayer(), "MAQUINA", "JUGADOR", j.elegirCarta(cartas));
+                //mostramos lo que sucedio
+                statusP.append(j.mensaje.toString() + "\n");
+                //actualizamos
+                actualizarTablero(cartas, hcont2);
             }
+            //revisar si la carta se puede jugar
+            else if (j.revisarCarta(carta)) {
 
-            actualizarTablero(cartas, hcont);
-        } else {
-            // si no se puede jugar, caes aqui
-            statusP.append("No se puede jugar esa carta:"+carta.toString()+"\n");
-            statusP.append("Puedes jugar la carta"+ j.elegirCarta(j.getCartasPlayer()).toString()+"\n");
+                if (carta instanceof CartaComodin) {
+
+                    CartaComodin cc = (CartaComodin) carta;
+                    if (cc.getColor() == Color.n) {
+                        // aqui juegan los comodines negros, que requieren que escojas un color y tienen que esperar.
+                        //callback
+                        j.jugarComodinColor(cc, "JUGADOR", new SeleccionarColorCallback() {
+                            @Override
+                            public void seleccionarColor(Color color) {
+//                            cc.setColor(color);
+                                manejarComodin(cartas, hcont, cc);
+                            }
+                        });
+                    } else {
+                        // aqui juegan los comodines que no son negros (mas2,mas4,bloqueo,reversa)
+                        manejarComodin(cartas, hcont, cc);
+                    }
+                } else {
+                    //juegan cartas normales
+                    jugarTurnoUI(cartas, hcont2, carta);
+                }
+
+                actualizarTablero(cartas, hcont);
+            } else {
+                // si no se puede jugar, caes aqui
+                statusP.append("No se puede jugar esa carta:" + carta.toString() + "\n");
+                statusP.append("Puedes jugar la carta" + j.elegirCarta(j.getCartasPlayer()).toString() + "\n");
+            }
         }
     }
 
     private void manejarComodin(List<Carta> cartas, LinearLayout hcont, CartaComodin cc) {
         if (cc.getTipo() == TipoComodin.BLOQUEO || cc.getTipo() == TipoComodin.REVERSA) {
             //los comodines bloqueo y reversa negros juegan una vez, y no juega la maquina
-            j.jugarCarta(cc,j.getCartasPlayer(), j.getCartasMaquina(), "JUGADOR", "MAQUINA");
+            j.jugarTurno(j.getCartasPlayer(), j.getCartasMaquina(), "JUGADOR", "MAQUINA",cc);
             statusP.append(j.mensaje.toString()+"\n");
             actualizarTablero(cartas, hcont);
         } else {
