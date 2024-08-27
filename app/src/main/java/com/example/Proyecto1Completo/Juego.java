@@ -192,6 +192,7 @@ public class Juego {
                 System.out.println("Ingresa que color quieres que tome la carta cambie de color: R(rojo),A(amarillo),z(azul),v(verde)");
                 mensaje.append("Ingresa que color quieres que tome la carta cambie de color: R(rojo),A(amarillo),z(azul),v(verde)"+"\n");
                 mainActivity.retornarColor(new SeleccionarColorCallback() {
+
                     @Override
                     public void seleccionarColor(Color color) {
                         cc.setColor(color);
@@ -279,8 +280,7 @@ public class Juego {
                 mensaje.append(nombreJugador +" "+ Juego.JUEGA + uc.toString()+"\n");
                 mensaje.append(nombreRival + " toma dos cartas!"+"\n");
                 System.out.println(Juego.SEPARADOR);
-                cartasRival.add(0,robarCarta());
-                cartasRival.add(0,robarCarta());
+                darCartas(cartasRival,2);
 
 
             }
@@ -294,34 +294,18 @@ public class Juego {
                 mensaje.append(nombreRival + "toma CUATRO cartas!"+"\n");
                 mensaje.append(nombreJugador + "juega la carta" + uc.toString()+"\n");
                 System.out.println(Juego.SEPARADOR);
-                cartasRival.add(0,robarCarta());
-                cartasRival.add(0,robarCarta());
-                cartasRival.add(0,robarCarta());
-                cartasRival.add(0,robarCarta());
-
+                darCartas(cartasRival,4);
             }
             System.out.println(uc);
         }
     }
 
-    public Scanner getSc() {
-        return sc;
-    }
-
-    public Random getRd() {
-        return rd;
-    }
-
-    public List<Carta> getMazo() {
-        return mazo;
-    }
-
-    public Jugador getJh() {
-        return jh;
-    }
-
-    public Jugador getJm() {
-        return jm;
+    public void darCartas(List<Carta> cartas,int numero){
+        for (int i = 0; i < numero; i++) {
+            Carta c = robarCarta();
+            mensaje.append("Robando carta ").append(c.toString()).append("\n");
+            cartas.add(0,c);
+        }
     }
 
     public List<Carta> getCartasPlayer() {
@@ -336,12 +320,8 @@ public class Juego {
         return uc;
     }
 
-    public static String getSeparador() {
-        return SEPARADOR;
-    }
 
-    public static String getJuega() {
-        return JUEGA;
-    }
+
+
 
 }
