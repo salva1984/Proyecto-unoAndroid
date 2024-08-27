@@ -135,7 +135,7 @@ public class Juego {
         return null;
     }
 
-    // metodo solo de maquina
+
     // Elige la primera carta que se puede jugar, null si no se puede jugar nada
     public Carta elegirCarta(List<Carta> cartasJugador) {
         for (Carta carta : cartasJugador) {
@@ -158,11 +158,15 @@ public class Juego {
         System.out.println(cartasMaquina);
 
         if (nombreJugador.equals("MAQUINA")) {
+            //si la maquina no puede jugar ninguna....
             if (elegirCarta(cartasJugador) == null) {
+                //le damoos una maquina a la maquina
                 cartasJugador.add(0,robarCarta());
-                mensaje.append(nombreJugador).append(" no tiene cartas disponibles para jugar, saltando turno.");
+                //avisamos que paso
+                mensaje.append(nombreJugador).append(" no tiene cartas disponibles para jugar, saltando turno."+"\n");
                 System.out.println(nombreJugador + " no tiene cartas disponibles para jugar, saltando turno.");
             } else {
+                //si la maquina si puede jugar alguna carta:...
                 jugarCarta(elegirCarta(cartasJugador), cartasJugador, cartasRival, nombreJugador, nombreRival);
             }
         } else { // Aqui juega el jugador
@@ -185,16 +189,13 @@ public class Juego {
         if (cc.getColor() == Color.n) {
 
             if (nombreJugador.equals("JUGADOR")) {
-                System.out.println(
-                        "Ingresa que color quieres que tome la carta cambie de color: R(rojo),A(amarillo),z(azul),v(verde)");
-                mensaje.append(
-                        "Ingresa que color quieres que tome la carta cambie de color: R(rojo),A(amarillo),z(azul),v(verde)"+"\n");
+                System.out.println("Ingresa que color quieres que tome la carta cambie de color: R(rojo),A(amarillo),z(azul),v(verde)");
+                mensaje.append("Ingresa que color quieres que tome la carta cambie de color: R(rojo),A(amarillo),z(azul),v(verde)"+"\n");
                 mainActivity.retornarColor(new SeleccionarColorCallback() {
                     @Override
                     public void seleccionarColor(Color color) {
                         cc.setColor(color);
                         callback.seleccionarColor(cc.getColor());
-
                     }
                 });
 
@@ -237,8 +238,6 @@ public class Juego {
             //bloqueo y reversa (funcionan igual)
             if (cc.getTipo() == TipoComodin.BLOQUEO || cc.getTipo() == TipoComodin.REVERSA) {
 
-
-
                 // Metemos al mazo la ultima carta
                 mazo.add(uc);
                 // Cambiamos la ultima carta
@@ -248,7 +247,7 @@ public class Juego {
                 System.out.println(nombreJugador + Juego.JUEGA + uc.toString());
                 mensaje.append(nombreJugador).append(Juego.JUEGA).append(uc.toString());
                 System.out
-                        .println(nombreJugador + " bloquea a: " + nombreRival + ", " + nombreJugador + " juega de nuevo.");
+                        .println(nombreJugador + " bloquea a: " + nombreRival + ", " + nombreJugador + " juega de nuevo."+"\n");
                 mensaje.append(nombreJugador).append(" bloquea a: ").append(nombreRival).append(", ").append(nombreJugador).append(" juega de nuevo.");
                 System.out.println(Juego.SEPARADOR);
 
@@ -265,9 +264,8 @@ public class Juego {
                 uc = cc;
                 cartasJugador.remove(cc);
                 System.out.println(nombreJugador + Juego.JUEGA + uc.toString());
-                mensaje.append(nombreJugador).append(Juego.JUEGA).append(uc.toString());
+                mensaje.append(nombreJugador).append(Juego.JUEGA).append(uc.toString()+"\n");
                 System.out.println(Juego.SEPARADOR);
-
 
             }
 
@@ -278,8 +276,8 @@ public class Juego {
                 cartasJugador.remove(cc);
                 System.out.println(nombreJugador + Juego.JUEGA + uc.toString());
                 System.out.println(nombreRival + " toma dos cartas!");
-                mensaje.append(nombreJugador + Juego.JUEGA + uc.toString());
-                mensaje.append(nombreRival + " toma dos cartas!");
+                mensaje.append(nombreJugador +" "+ Juego.JUEGA + uc.toString()+"\n");
+                mensaje.append(nombreRival + " toma dos cartas!"+"\n");
                 System.out.println(Juego.SEPARADOR);
                 cartasRival.add(0,robarCarta());
                 cartasRival.add(0,robarCarta());
@@ -293,8 +291,8 @@ public class Juego {
                 cartasJugador.remove(cc);
                 System.out.println(nombreRival + "toma CUATRO cartas!");
                 System.out.println(nombreJugador + "juega la carta" + uc.toString());
-                mensaje.append(nombreRival + "toma CUATRO cartas!");
-                mensaje.append(nombreJugador + "juega la carta" + uc.toString());
+                mensaje.append(nombreRival + "toma CUATRO cartas!"+"\n");
+                mensaje.append(nombreJugador + "juega la carta" + uc.toString()+"\n");
                 System.out.println(Juego.SEPARADOR);
                 cartasRival.add(0,robarCarta());
                 cartasRival.add(0,robarCarta());
