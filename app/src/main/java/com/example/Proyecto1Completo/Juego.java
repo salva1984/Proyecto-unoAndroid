@@ -328,6 +328,8 @@ public class Juego {
             }
             System.out.println(ultimaCarta);
         }
+        if(cartasJugador.size()==1)
+            mensaje.append(nombreJugador+"Tiene una carta!"+"UNO!!!"+"\n");
     }
 
     public void darCartas(List<Carta> cartas,int numero){
