@@ -30,9 +30,9 @@ public class Juego {
     // cartas
     List<Carta> cartasPlayer;
     List<Carta> cartasMaquina;
-    boolean turnoJugador;
+
     // carta inicial
-    Carta uc;
+    Carta ultimaCarta;
 
     public static final String SEPARADOR = "-------------------------------";
     public static final String JUEGA = " juega la carta: ";
@@ -52,10 +52,14 @@ public class Juego {
         // cartas
         cartasPlayer = jh.getCartas();
         cartasMaquina = jm.getCartas();
-        turnoJugador = true;
+
         // carta inicial
-        uc = this.robarCarta();
+        ultimaCarta = this.robarCarta();
+        while (ultimaCarta.getColor() == Color.n){
+            ultimaCarta = this.robarCarta();
+        }
     }
+
 
 
     public Carta robarCarta() {
@@ -76,16 +80,16 @@ public class Juego {
             CartaNormal cn = (CartaNormal) cartaJugar;
 
             // Tenemos que revisar si la ultima carta es Normal o Comodin
-            if (uc instanceof CartaNormal) {
+            if (ultimaCarta instanceof CartaNormal) {
 
                 // Hacemos downcasting por las mismas razones
-                CartaNormal ucn = (CartaNormal) uc;
+                CartaNormal ucn = (CartaNormal) ultimaCarta;
 
                 // Comparamos si ambas comparten numero o color
                 if (cn.getNumero() == ucn.getNumero() || cn.getColor() == ucn.getColor())
                     return true;
             }
-            if (uc instanceof CartaComodin && cn.getColor() == uc.getColor())
+            if (ultimaCarta instanceof CartaComodin && cn.getColor() == ultimaCarta.getColor())
                 return true;
 
         }
@@ -96,7 +100,7 @@ public class Juego {
             // la ultima carta puede ser comodin o normal, pero al jugar una carta comodin
             // encima de esta solo nos importa el color porque los comodines no tiene
             // numeros
-            return uc.getColor() == cartaJugar.getColor();
+            return ultimaCarta.getColor() == cartaJugar.getColor();
 
         }
         return false;
@@ -115,7 +119,7 @@ public class Juego {
     // metodo solo pensado para jugador humano
     // pide un indice de carta y retorna la carta si se puede jugar
     public Carta pedirCarta(List<Carta> cartasJugador) {
-        System.out.println("Ultima carta: " + uc);
+        System.out.println("Ultima carta: " + ultimaCarta);
         System.out.println("Ingrese el indice de la carta a jugar: ");
         int idx = sc.nextInt();
         sc.nextLine();
@@ -149,14 +153,17 @@ public class Juego {
 
     public void jugarTurno(List<Carta> cartasJugador, List<Carta> cartasRival, String nombreJugador,
                            String nombreRival, Carta cartaJugar) {
-        System.out.println(Juego.SEPARADOR);// -------
-        System.out.println("Ultima carta: " + uc);
-        System.out.println("Turno de:" + nombreJugador);
-        System.out.println("cartas del jugador: ");
-        System.out.println(cartasPlayer.toString());
-        System.out.println("cartas de la maquina");
-        System.out.println(cartasMaquina);
+//        System.out.println(Juego.SEPARADOR);// -------
+//        System.out.println("Ultima carta: " + ultimaCarta);
+//        System.out.println("Turno de:" + nombreJugador);
+//        System.out.println("cartas del jugador: ");
+//        System.out.println(cartasPlayer.toString());
+//        System.out.println("cartas de la maquina");
+//        System.out.println(cartasMaquina);
+
         mensaje = new StringBuilder();
+
+        //AQUI JUEGA LA MAQUINA
         if (nombreJugador.equals("MAQUINA")) {
             //borrate mensaje!!!!
             mensaje.delete(0, mensaje.length());
@@ -165,7 +172,8 @@ public class Juego {
                 //le damoos una maquina a la maquina
                 mensaje.append(nombreJugador).append(" no tiene cartas disponibles para jugar, saltando turno."+"\n");
                 darCartas(cartasJugador,1);
-                System.out.println(nombreJugador + " no tiene cartas disponibles para jugar, saltando turno.");
+
+//                System.out.println(nombreJugador + " no tiene cartas disponibles para jugar, saltando turno.");
             } else {
                 //si la maquina si puede jugar alguna carta:...
                 jugarCarta(elegirCarta(cartasJugador), cartasJugador, cartasRival, nombreJugador, nombreRival);
@@ -190,7 +198,7 @@ public class Juego {
         if (cc.getColor() == Color.n) {
 
             if (nombreJugador.equals("JUGADOR")) {
-                System.out.println("Ingresa que color quieres que tome la carta cambie de color: R(rojo),A(amarillo),z(azul),v(verde)");
+//                System.out.println("Ingresa que color quieres que tome la carta cambie de color: R(rojo),A(amarillo),z(azul),v(verde)");
                 mensaje.append("Ingresa que color quieres que tome la carta cambie de color: R(rojo),A(amarillo),z(azul),v(verde)"+"\n");
                 mainActivity.retornarColor(new SeleccionarColorCallback() {
 
@@ -207,7 +215,10 @@ public class Juego {
         }
     }
 
+    // si juega la maquina y la carta es negra, da un color aleatorio a la carta.
+
     private void elegirColorAleatorio(CartaComodin cc,String nombreJugador) {
+
         if (cc.getColor() == Color.n && nombreJugador.equals("MAQUINA")) {
             Color cl = Color.values()[rd.nextInt(Color.values().length)];
             while (cl == Color.n) {
@@ -215,7 +226,10 @@ public class Juego {
             }
             cc.setColor(cl);
         }
+
     }
+
+
 
     public void jugarCarta(Carta cartaJugar, List<Carta> cartasJugador,
                            List<Carta> cartasRival, String nombreJugador, String nombreRival) {
@@ -224,34 +238,36 @@ public class Juego {
 
         if (cartaJugar instanceof CartaNormal) {
             // Metemos al mazo la ultima carta
-            mazo.add(uc);
+            mazo.add(ultimaCarta);
             // Cambiamos la ultima carta
-            uc = cartaJugar;
+            ultimaCarta = cartaJugar;
             // quitmos la carta jugada al jugador
-            cartasJugador.remove(uc);
-            mensaje.append(nombreJugador).append(Juego.JUEGA).append(uc.toString()+"\n");
-            System.out.println(Juego.SEPARADOR);
+            cartasJugador.remove(ultimaCarta);
+            mensaje.append(nombreJugador).append(Juego.JUEGA).append(ultimaCarta.toString()+"\n");
+//            System.out.println(Juego.SEPARADOR);
 
         }
 
         if (cartaJugar instanceof CartaComodin) {
+
             CartaComodin cc = (CartaComodin) cartaJugar;
 
             //bloqueo y reversa (funcionan igual)
             if (cc.getTipo() == TipoComodin.BLOQUEO || cc.getTipo() == TipoComodin.REVERSA) {
 
                 // Metemos al mazo la ultima carta
-                mazo.add(uc);
+                mazo.add(ultimaCarta);
                 // Cambiamos la ultima carta
-                uc = cc;
+                ultimaCarta = cc;
                 // quitmos la carta jugada al jugador
                 cartasJugador.remove(cc);
-                System.out.println(nombreJugador + Juego.JUEGA + uc.toString());
-                mensaje.append(nombreJugador).append(Juego.JUEGA).append(uc.toString()).append("\n");
-                System.out
-                        .println(nombreJugador + " bloquea a: " + nombreRival + ", " + nombreJugador + " juega de nuevo."+"\n");
+
+//                System.out.println(nombreJugador + Juego.JUEGA + ultimaCarta.toString());
+                mensaje.append(nombreJugador).append(Juego.JUEGA).append(ultimaCarta.toString()).append("\n");
+//                System.out
+//                        .println(nombreJugador + " bloquea a: " + nombreRival + ", " + nombreJugador + " juega de nuevo."+"\n");
                 mensaje.append(nombreJugador).append(" bloquea a: ").append(nombreRival).append(", ").append(nombreJugador).append(" juega de nuevo.");
-                System.out.println(Juego.SEPARADOR);
+//                System.out.println(Juego.SEPARADOR);
 
                 ////////////////////////////////////////////////////////////////////
                 //
@@ -264,24 +280,29 @@ public class Juego {
             }
 
             if (cc.getTipo() == TipoComodin.CAMBIOCOLOR) {
+
                 elegirColorAleatorio(cc,nombreJugador);
-                mazo.add(uc);
-                uc = cc;
+
+                mazo.add(ultimaCarta);
+                ultimaCarta = cc;
                 cartasJugador.remove(cc);
-                System.out.println(nombreJugador + Juego.JUEGA + uc.toString());
-                mensaje.append(nombreJugador).append(Juego.JUEGA).append(uc.toString()+"\n");
-                System.out.println(Juego.SEPARADOR);
+
+//                System.out.println(nombreJugador + Juego.JUEGA + ultimaCarta.toString());
+                mensaje.append(nombreJugador).append(Juego.JUEGA).append(ultimaCarta.toString()+"\n");
+//                System.out.println(Juego.SEPARADOR);
 
             }
 
             if (cc.getTipo() == TipoComodin.MAS2) {
+
                 elegirColorAleatorio(cc,nombreJugador);
-                mazo.add(uc);
-                uc = cc;
+
+                mazo.add(ultimaCarta);
+                ultimaCarta = cc;
                 cartasJugador.remove(cc);
-                System.out.println(nombreJugador + Juego.JUEGA + uc.toString());
+                System.out.println(nombreJugador + Juego.JUEGA + ultimaCarta.toString());
                 System.out.println(nombreRival + " toma dos cartas!");
-                mensaje.append(nombreJugador +" "+ Juego.JUEGA + uc.toString()+"\n");
+                mensaje.append(nombreJugador +" "+ Juego.JUEGA + ultimaCarta.toString()+"\n");
                 mensaje.append(nombreRival + " toma dos cartas!"+"\n");
 
 
@@ -292,25 +313,24 @@ public class Juego {
             }
             if (cc.getTipo() == TipoComodin.MAS4) {
                 elegirColorAleatorio(cc,nombreJugador);
-                mazo.add(uc);
-                uc = cc;
+                mazo.add(ultimaCarta);
+                ultimaCarta = cc;
                 cartasJugador.remove(cc);
 
                 System.out.println(nombreRival + "toma CUATRO cartas!");
-                System.out.println(nombreJugador + "juega la carta" + uc.toString());
+                System.out.println(nombreJugador + "juega la carta" + ultimaCarta.toString());
 
-                mensaje.append(nombreJugador + "juega la carta" + uc.toString()+"\n");
+                mensaje.append(nombreJugador + "juega la carta" + ultimaCarta.toString()+"\n");
                 mensaje.append(nombreRival + "toma CUATRO cartas!"+"\n");
 
                 System.out.println(Juego.SEPARADOR);
                 darCartas(cartasRival,4);
             }
-            System.out.println(uc);
+            System.out.println(ultimaCarta);
         }
     }
 
     public void darCartas(List<Carta> cartas,int numero){
-
 
         for (int i = 0; i < numero; i++) {
             Carta c = robarCarta();
@@ -327,8 +347,8 @@ public class Juego {
         return cartasMaquina;
     }
 
-    public Carta getUc() {
-        return uc;
+    public Carta getUltimaCarta() {
+        return ultimaCarta;
     }
 
 

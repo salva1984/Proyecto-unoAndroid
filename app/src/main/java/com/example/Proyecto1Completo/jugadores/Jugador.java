@@ -13,7 +13,7 @@ public class Jugador {
     // Este constructor toma el mazo y le quita 7 cartas y se las añade al del jugador
     public Jugador(List<Carta> mazo){ 
         cartas = new ArrayList<>();
-        while(cartas.size()<7){
+        while(cartas.size()<7){ //cuantas cartas tiene el jugador.
             Random random = new Random();
             int randint = random.nextInt(mazo.size());
             cartas.add(mazo.get(randint));

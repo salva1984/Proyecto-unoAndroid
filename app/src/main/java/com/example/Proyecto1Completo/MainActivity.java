@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView uc;
     TextView statusP;
-    TextView statusM;
+
     LinearLayout hcont;
     LinearLayout hcont2;
     //TODO
@@ -86,16 +86,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void construirHcont() {
         actualizarUc();
-        hcont.removeAllViews();
+        hcont.removeAllViews(); //se quitan todas las imagenes
+
         for (Carta carta : j.getCartasMaquina()) {
             ImageView imv = new ImageView(this);
+
             String nombre = carta.toString();
+
             @SuppressLint("DiscouragedApi") int resId = getResources().getIdentifier(nombre, "drawable", getPackageName());
-            if (resId != 0) {
-                imv.setImageResource(resId);
-            } else {
-                Log.e("MainActivity", "Recurso no encontrado para: " + nombre);
-            }
+
+            imv.setImageResource(resId);
 
             hcont.addView(imv);
         }
@@ -114,13 +114,10 @@ public class MainActivity extends AppCompatActivity {
             ImageView imv = new ImageView(this);
             String nombre = carta.toString();
             int resId = getResources().getIdentifier(nombre, "drawable", getPackageName());
-            if (resId != 0) {
-                imv.setImageResource(resId);
-            } else {
-                Log.e("MainActivity", "Recurso no encontrado para: " + nombre);
-            }
-            imv.setOnClickListener(view -> {
 
+            imv.setImageResource(resId);
+
+            imv.setOnClickListener(view -> {
                 jugarCartaUI(cartas, hcont, carta);
             });
             hcont.addView(imv);
@@ -129,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void jugarCartaUI(List<Carta> cartas, LinearLayout hcont, Carta carta) {
+
         if(j.getCartasMaquina().isEmpty()){
             //si la maquina esta vacia, no hagas nada loco
             statusP.setText("Gana la maquina!");}
@@ -136,10 +134,12 @@ public class MainActivity extends AppCompatActivity {
 
 
             if (!(j.revisarMano(j.getCartasPlayer()))) {
-                //si no puedes jugar ninguna carta, caes aqui
+                //si no puedes jugar ninguna carta para jugar , caes aqui
+
                 statusP.append("No tienes cartas que jugar!" + "\n");
                 //te dan una carta, borra los mensajes por si jugaste un bloqueo y de una te mando a jugar de nuevo aca
                 j.mensaje.delete(0, j.mensaje.length());
+
                 j.darCartas(j.getCartasPlayer(),1);
                 statusP.append(j.mensaje.toString() + "\n");
                 //actualiza tu mano
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void jugarTurnoUI(List<Carta> cartas, LinearLayout hcont, Carta cc) {
-        //TODO edge case que ocurre cuando se juega un +4 negro y no tienes cartas que tambien se puedan jugar
+
         j.jugarTurno(j.getCartasPlayer(), j.getCartasMaquina(), "JUGADOR", "MAQUINA",cc);
         statusP.append(j.mensaje.toString()+"\n");
         j.jugarTurno(j.getCartasMaquina(), j.getCartasPlayer(), "MAQUINA", "JUGADOR", cc);
@@ -218,9 +218,10 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("DiscouragedApi")
     public void actualizarUc() {
-        uc.setImageResource(getResources().getIdentifier(j.getUc().toString(), "drawable", getPackageName()));
+        uc.setImageResource(getResources().getIdentifier(j.getUltimaCarta().toString(), "drawable", getPackageName()));
     }
 
+    //metodo que selecciona el color.
     public void retornarColor(SeleccionarColorCallback callback) {
 
 
@@ -228,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
         ba.setVisibility(TextView.VISIBLE);
         bv.setVisibility(TextView.VISIBLE);
         bz.setVisibility(TextView.VISIBLE);
+
         br.setOnClickListener(view -> {
             callback.seleccionarColor(Color.r);
             ocultarBotones();
